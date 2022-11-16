@@ -17,7 +17,7 @@
           <div class="pg-profile-box-text" v-if="profile.nama">
             <h2>Hi, {{profile.nama}}</h2>
             <h3>{{profile.noanggota}}</h3>
-            <h3>{{profile.majelis}} <small>({{profile.desa}})</small></h3>
+            <h3>{{profile.majelis}} <small>(CIKEPO)</small></h3>
           </div>
           <div class="pg-profile-box-text" v-else>
             <h2>Hi, Pengelola</h2>
@@ -47,26 +47,10 @@
             </router-link>
           </b-col>
           <b-col cols="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/umroh`" class="color-4">
-              <div class="py-2">
-                <span>Umroh</span>
-                Rp {{profile.umroh}}
-              </div>
-            </router-link>
-          </b-col>
-          <b-col cols="6">
             <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/simwa`" class="color-1">
               <div class="py-2">
                 <span>Simwa</span>
                 Rp {{profile.simwa}}
-              </div>
-            </router-link>
-          </b-col>
-          <b-col cols="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/qurban`" class="color-2">
-              <div class="py-2">
-                <span>Qurban</span>
-                Rp {{profile.qurban}}
               </div>
             </router-link>
           </b-col>
@@ -79,18 +63,37 @@
             </router-link>
           </b-col>
           <b-col cols="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/pendidikan`">
-              <div class="py-2">
-                <span>Pendidikan</span>
-                Rp {{profile.pendidikan}}
-              </div>
-            </router-link>
-          </b-col>
-          <b-col cols="6">
             <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/pembiayaan`" class="color-4">
               <div class="py-2">
                 <span>Pembiayaan</span>
                 Rp {{profile.saldo_outstanding}}
+              </div>
+            </router-link>
+          </b-col>
+          <b-col cols="12" class="pb-3">
+            <hr class="m-0">
+          </b-col>
+          <b-col cols="6">
+            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/umroh`" class="color-4">
+              <div class="py-2">
+                <span>Umroh</span>
+                Rp {{profile.umroh}}
+              </div>
+            </router-link>
+          </b-col>
+          <b-col cols="6">
+            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/qurban`" class="color-2">
+              <div class="py-2">
+                <span>Qurban</span>
+                Rp {{profile.qurban}}
+              </div>
+            </router-link>
+          </b-col>
+          <b-col cols="6">
+            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/pendidikan`">
+              <div class="py-2">
+                <span>Pendidikan</span>
+                Rp {{profile.pendidikan}}
               </div>
             </router-link>
           </b-col>

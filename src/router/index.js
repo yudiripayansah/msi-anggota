@@ -17,7 +17,7 @@ const routes = [
         name: 'Dashboard',
         component: () => import(/* webpackChunkName: "dashboard" */ '../pages/Dashboard.vue'),
         meta: {
-          title: 'Dashboard - KIS',
+          title: 'Dashboard - MSI',
         }
       },
       {
@@ -25,7 +25,7 @@ const routes = [
         name: 'Saldo',
         component: () => import(/* webpackChunkName: "Saldo" */ '../pages/Saldo.vue'),
         meta: {
-          title: 'Saldo - KIS',
+          title: 'Saldo - MSI',
         }
       },
       {
@@ -33,7 +33,7 @@ const routes = [
         name: 'Anggota',
         component: () => import(/* webpackChunkName: "anggota" */ '../pages/Anggota.vue'),
         meta: {
-          title: 'Anggota - KIS',
+          title: 'Anggota - MSI',
         }
       },
     ]
@@ -43,7 +43,7 @@ const routes = [
     name: 'Login',
     component: () => import(/* webpackChunkName: "login" */ '../pages/Login.vue'),
     meta: {
-      title: 'Login - KIS',
+      title: 'Login - MSI',
     }
   }
 ]
