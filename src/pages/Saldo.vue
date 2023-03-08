@@ -15,9 +15,9 @@
         <div class="d-flex">
           <img src="../assets/images/profile.png" alt="">
           <div class="pg-profile-box-text">
-            <h2>{{profile.nama}}</h2>
-            <h3>{{profile.noanggota}}</h3>
-            <h3>{{profile.majelis}} <small>({{profile.desa}})</small></h3>
+            <h2>Hi, {{profile.nama_anggota}}</h2>
+            <h3>{{profile.no_anggota}}</h3>
+            <h3>{{profile.nama_rembug}} <small>({{profile.nama_desa}})</small></h3>
           </div>
         </div>
       </div>
@@ -40,9 +40,9 @@
           <b-col cols="6">Jangka Waktu</b-col>
           <b-col cols="6" class="text-right">{{ activeRekening.jk_waktu }}</b-col>
           <b-col cols="6">Pokok</b-col>
-          <b-col cols="6" class="text-right">Rp {{ activeRekening.pokok }}</b-col>
+          <b-col cols="6" class="text-right">Rp {{ thousand(activeRekening.pokok) }}</b-col>
           <b-col cols="6">Margin</b-col>
-          <b-col cols="6" class="text-right">Rp {{ activeRekening.margin }}</b-col>
+          <b-col cols="6" class="text-right">Rp {{ thousand(activeRekening.margin) }}</b-col>
           <b-col cols="6">Status</b-col>
           <b-col cols="6" class="text-right">{{ activeRekening.status }}</b-col>
         </b-row>
@@ -52,19 +52,19 @@
             <h6><small><b>{{h.keterangan}}</b></small></h6>
             <div class="d-flex justify-content-between align-items-end">
               <label>Saldo Awal</label>
-              <span>Rp {{h.saldo_awal}}</span>
+              <span>Rp {{thousand(h.saldo_awal)}}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
               <label>Setor</label>
-              <span>Rp {{h.setor}}</span>
+              <span>Rp {{thousand(h.setor)}}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
               <label>Tarik</label>
-              <span>Rp {{h.tarik}}</span>
+              <span>Rp {{thousand(h.tarik)}}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
               <label>Saldo Akhir</label>
-              <span>Rp {{h.saldo}}</span>
+              <span>Rp {{thousand(h.saldo_akhir)}}</span>
             </div>
           </div>
           <div class="mb-3 rounded p-3 text-green-3 border-green-3 border-3 border" v-if="$route.params.type == 'tabungan-berjangka'">
@@ -82,11 +82,11 @@
               <span>Rp {{h.saldo}}</span>
             </div>
           </div>
-          <div class="mb-3 rounded p-3 border" v-if="$route.params.type == 'pembiayaan'" :class="(h.tgl_bayar == 'Belum Dibayar') ? 'text-red-3 border-red-3' : 'text-green-3 border-green-3'">
-            <h6>Angsuran Ke {{h.angs_ke}}</h6>
+          <div class="mb-3 rounded p-3 border" v-if="$route.params.type == 'pembiayaan'" :class="(!h.tgl_bayar) ? 'text-red-3 border-red-3' : 'text-green-3 border-green-3'">
+            <h6>Angsuran Ke {{h.angsuran_ke}}</h6>
             <div class="d-flex justify-content-between align-items-end">
               <label>Tgl Jatuh Tempo</label>
-              <span>{{h.tgl_jtempo}}</span>
+              <span>{{h.tgl_angsuran}}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
               <label>Tanggal Bayar</label>
@@ -94,15 +94,19 @@
             </div>
             <div class="d-flex justify-content-between align-items-end">
               <label>Angsuran Pokok</label>
-              <span>Rp {{h.angs_pokok}}</span>
+              <span>Rp {{thousand(h.angsuran_pokok)}}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
-              <label>Saldo Margin</label>
-              <span>Rp {{h.saldo_margin}}</span>
+              <label>Angsuran Margin</label>
+              <span>Rp {{thousand(h.angsuran_margin)}}</span>
             </div>
             <div class="d-flex justify-content-between align-items-end">
               <label>Saldo Pokok</label>
-              <span>Rp {{h.saldo_pokok}}</span>
+              <span>Rp {{thousand(h.saldo_pokok)}}</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-end">
+              <label>Saldo Margin</label>
+              <span>Rp {{thousand(h.saldo_margin)}}</span>
             </div>
           </div>
         </div>
@@ -156,12 +160,9 @@ export default {
   methods: {
     ...mapActions(["logout"]),
     getRekening(){
-      let url = `${baseUrl}information/financing`
+      let url = `${baseUrl}member/information/financing`
       let payloadData = {
-        id_user : this.user.id_user,
-      }
-      if(this.user.tipe_user == 2){
-        payloadData.id_user = this.$route.params.noanggota
+        no_anggota : this.user.nama_user,
       }
       let payload = new FormData()
       for(let key in payloadData){
@@ -191,17 +192,9 @@ export default {
     },
     getProfile(){
       this.profile.loading = true
-      let url = `${baseUrl}information/dashboard`
-      let noanggota = this.$route.params.noanggota
+      let url = `${baseUrl}member/information/dashboard`
       let payloadData = {
-        id_user : this.user.id_user,
-        tipe_user : this.user.tipe_user,
-      }
-      if(noanggota) {
-        payloadData = {
-          id_user : noanggota,
-          tipe_user : 1,
-        }
+        nama_user : this.user.nama_user
       }
       let payload = new FormData()
       for(let key in payloadData){
@@ -225,11 +218,11 @@ export default {
       })
     },
     getHistori(){
-      let url = `${baseUrl}information/history_member_saving`
+      let url = `${baseUrl}member/information/history_saving`
       let type = this.$route.params.type
       let noanggota = this.$route.params.noanggota
       let payloadData = {
-        id_user : this.user.id_user,
+        no_anggota : this.user.nama_user,
       }
       if(noanggota){
         payloadData = {
@@ -241,25 +234,18 @@ export default {
       }
       if(type == 'simwa') {
         payloadData.jenis_trx = 2
-        // payloadData.jenis_trx = 3
       }
       if(type == 'sukarela') {
+        payloadData.jenis_trx = 3
+      }
+      if(type == 'berencana') {
         payloadData.jenis_trx = 4
-      }
-      if(type == 'umroh') {
-        payloadData.jenis_trx = 5
-      }
-      if(type == 'qurban') {
-        payloadData.jenis_trx = 6
-      }
-      if(type == 'pendidikan') {
-        payloadData.jenis_trx = 7
       }
       if(type == 'tabungan-berjangka'){
         url = `${baseUrl}information/history_member_deposito`
       }
       if(type == 'pembiayaan'){
-        url = `${baseUrl}information/history_member_financing`
+        url = `${baseUrl}member/information/history_financing`
       }
       let fd = new Date(this.from_date)
       let td = new Date(this.thru_date)
@@ -273,7 +259,7 @@ export default {
       }
       if(type == 'pembiayaan'){
         payloadData = {
-          nomrek: this.selectedRekening
+          no_rekening: this.selectedRekening
         }
         let activeRek = this.rekening.find((item) => {
           return item.value == this.selectedRekening

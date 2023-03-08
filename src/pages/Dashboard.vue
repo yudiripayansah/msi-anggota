@@ -14,14 +14,10 @@
       <div class="pg-profile-box d-flex align-items-center justify-content-between">
         <div class="d-flex">
           <img src="/assets/images/profile.png" alt="">
-          <div class="pg-profile-box-text" v-if="profile.nama">
-            <h2>Hi, {{profile.nama}}</h2>
-            <h3>{{profile.noanggota}}</h3>
-            <h3>{{profile.majelis}} <small>(CIKEPO)</small></h3>
-          </div>
-          <div class="pg-profile-box-text" v-else>
-            <h2>Hi, Pengelola</h2>
-            <h3>Koperasi Syariah KIS</h3>
+          <div class="pg-profile-box-text">
+            <h2>Hi, {{profile.nama_anggota}}</h2>
+            <h3>{{profile.no_anggota}}</h3>
+            <h3>{{profile.nama_rembug}} <small>({{profile.nama_desa}})</small></h3>
           </div>
         </div>
         <div @click="doLogout()" class="d-flex justify-content-center align-items-center pg-btn-logout">
@@ -30,58 +26,50 @@
       </div>
       <div class="pg-dashboard-nav">
         <b-row>
-          <b-col cols="12">
-            <router-link to="#" class="color-3" v-if="profile.jumlah">
-              <div class="py-2">
-                <span>Jumlah Anggota</span>
-                {{profile.jumlah}}
-              </div>
-            </router-link>
-          </b-col>
           <b-col col="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/simpok`">
+            <router-link to="/saldo/simpok">
               <div class="py-2">
                 <span>Simpok</span>
-                Rp {{profile.simpok}}
+                Rp {{thousand(profile.simpok)}}
               </div>
             </router-link>
           </b-col>
           <b-col cols="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/simwa`" class="color-1">
+            <router-link to="/saldo/simwa" class="color-1">
               <div class="py-2">
                 <span>Simwa</span>
-                Rp {{profile.simwa}}
+                Rp {{thousand(profile.simwa)}}
               </div>
             </router-link>
           </b-col>
           <b-col cols="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/sukarela`" class="color-2">
+            <router-link to="/saldo/sukarela" class="color-2">
               <div class="py-2">
                 <span>Sukarela</span>
-                Rp {{profile.sukarela}}
+                Rp {{thousand(profile.simsuk)}}
               </div>
             </router-link>
           </b-col>
           <b-col cols="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/pembiayaan`" class="color-4">
+            <router-link to="/saldo/pembiayaan" class="color-4">
               <div class="py-2">
                 <span>Pembiayaan</span>
-                Rp {{profile.saldo_outstanding}}
+                Rp {{thousand(profile.saldo_outstanding)}}
               </div>
             </router-link>
           </b-col>
           <b-col cols="12" class="pb-3">
             <hr class="m-0">
           </b-col>
-          <b-col cols="6">
-            <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/umroh`" class="color-4">
+          <b-col cols="12">
+            <router-link to="/saldo/berencana" class="" v-for="(stb, stbIndex) in profile.saldo_tab_berencana" :key="`stb-${stbIndex}`">
               <div class="py-2">
-                <span>Umroh</span>
-                Rp {{profile.umroh}}
+                <span>{{stb.product_name}}</span>
+                Rp {{thousand(stb.saldo)}}
               </div>
             </router-link>
           </b-col>
-          <b-col cols="6">
+          <!-- <b-col cols="6">
             <router-link :to="Number(user.tipe_user) == 2 ? `#` : `/saldo/qurban`" class="color-2">
               <div class="py-2">
                 <span>Qurban</span>
@@ -104,14 +92,7 @@
                 Rp {{profile.saldo_deposito}}
               </div>
             </router-link>
-          </b-col>
-          <b-col cols="12">
-            <router-link to="/anggota" v-if="profile.jumlah">
-              <div class="py-3">
-                <h6 class="m-0"><b>Lihat Anggota</b></h6>
-              </div>
-            </router-link>
-          </b-col>
+          </b-col> -->
         </b-row>
       </div>
     </div>
@@ -143,10 +124,9 @@ export default {
     ...mapActions(["logout"]),
     getProfile(){
       this.profile.loading = true
-      let url = `${baseUrl}information/dashboard`
+      let url = `${baseUrl}member/information/dashboard`
       let payloadData = {
-        id_user : this.user.id_user,
-        tipe_user : this.user.tipe_user,
+        nama_user : this.user.nama_user
       }
       let payload = new FormData()
       for(let key in payloadData){

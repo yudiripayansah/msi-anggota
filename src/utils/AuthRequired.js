@@ -1,8 +1,8 @@
 export default (to, from, next) => {
-  if (localStorage.getItem('kisMobileApp') != null && localStorage.getItem('kisMobileApp').length > 0) {
+  if (localStorage.getItem('msiAppAnggota') != null && localStorage.getItem('msiAppAnggota').length > 0) {
     next()
   } else {
-    localStorage.removeItem('kisMobileApp')
+    localStorage.removeItem('msiAppAnggota')
     next('/login')
   }
 }

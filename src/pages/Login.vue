@@ -7,7 +7,7 @@
     <div class="pg-content">
       <form @submit.prevent="doLogin" class="d-flex flex-column align-items-center justify-content-center w-100">
         <b-form-group class="w-100">
-          <b-input class="fm-input" placeholder="Username / Userid" v-model="form.data.id_user"/>
+          <b-input class="fm-input" placeholder="Username / Userid" v-model="form.data.nama_user"/>
         </b-form-group>
         <b-form-group class="w-100 mt-1" v-if="loginState">
           <b-input-group>
@@ -58,11 +58,9 @@ export default {
       ],
       form : {
         data : {
-          id_user: '0101010105',
-          // id_user: null,
-          password: null,
-          tipe_user: null,
-          token: null
+          // nama_user: '0101010105',
+          nama_user: null,
+          password: null
         },
         loading : null
       },
@@ -84,13 +82,13 @@ export default {
   methods: {
     ...mapActions(["login"]),
     doLogin(){
-      let url = `${baseUrl}auth/check_username`
+      let url = `${baseUrl}member/authenticate/check_username`
       switch (this.loginState) {
         case 'registered':
-          url = `${baseUrl}auth/check_password`
+          url = `${baseUrl}member/authenticate/check_password`
           break;
         case 'new':
-          url = `${baseUrl}auth/check_password`
+          url = `${baseUrl}member/authenticate/check_password`
           break;
       }
       if((this.loginState == 'new' && this.password == this.cpassword) || (this.loginState == 'registered') || (!this.loginState)){
@@ -109,7 +107,6 @@ export default {
             switch (msg) {
               case 'Silakkan masukkan Password Anda':
                 this.notif('Success',msg,'success')
-                this.form.data.tipe_user = data.tipe_user
                 if(token)
                   this.form.data.token = token
                 if(this.loginState){
@@ -119,9 +116,8 @@ export default {
                   this.loginState = 'registered'
                 }
                 break;
-              case 'Login Berhasil! Anda akan dialihkan ke halaman Dashboard':
+              case 'Login Berhasil! Anda akan dialihkan ke halaman Dashboard!':
               this.notif('Success',msg,'success')
-                this.form.data.tipe_user = data.tipe_user
                 if(token)
                   this.form.data.token = token
                 if(this.loginState){
